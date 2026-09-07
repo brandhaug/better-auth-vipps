@@ -1,7 +1,8 @@
 # better-auth-vipps
 
-Status: initial proposal, 2026-09-07. This repository contains tooling and a design
-specification. It does not implement login yet. API examples below are proposed.
+Status: minimal implementation, 2026-09-07. The provider and browser example exist.
+Eighteen local integration tests pass. Live Vipps verification and the remaining
+release criteria below are pending. Unimplemented API ideas are identified below.
 
 ## Problem and intended outcome
 
@@ -51,7 +52,7 @@ Login Connect, national identity numbers, marketing consents, and custom session
 storage are outside the first release. MobilePay availability and branding must
 be verified per merchant market before advertising support beyond the tested flow.
 
-## Proposed public API
+## Public API and planned extensions
 
 ```ts
 import { betterAuth } from 'better-auth'
@@ -65,6 +66,8 @@ export const auth = betterAuth({
 				vipps({
 					clientId: process.env.VIPPS_CLIENT_ID!,
 					clientSecret: process.env.VIPPS_CLIENT_SECRET!,
+					subscriptionKey: process.env.VIPPS_SUBSCRIPTION_KEY!,
+					merchantSerialNumber: process.env.VIPPS_MERCHANT_SERIAL_NUMBER!,
 					environment: 'test'
 				})
 			]
@@ -73,8 +76,8 @@ export const auth = betterAuth({
 })
 ```
 
-`vipps` should return the public generic OAuth configuration type exported by the
-supported Better Auth version. Proposed exported types are `VippsOptions` and
+`vipps` returns the public generic OAuth configuration type exported by the
+supported Better Auth version. Exported types are `VippsOptions` and
 `VippsProfile`. The example omits application database configuration.
 
 | Option                                   | Proposed behavior                                                                                                                                           |
@@ -86,10 +89,14 @@ supported Better Auth version. Proposed exported types are `VippsOptions` and
 | `redirectURI`                            | Optional override; otherwise use Better Auth's callback for this provider ID.                                                                               |
 | `disableSignUp`, `disableImplicitSignUp` | Pass through the supported Better Auth semantics.                                                                                                           |
 
-Additional subscription, merchant, or system-identification options are conditional
-on verification of the current Login API requirements. Do not copy credential
-requirements from the payments API. Keep endpoint URLs fixed by environment;
-arbitrary issuer overrides are unnecessary for the initial public interface.
+The current helper requires `subscriptionKey` and `merchantSerialNumber` in
+addition to the client credentials. Vipps's merchant quick start sends the
+subscription key to UserInfo and uses Basic authentication for token exchange.
+The optional `scopes` proposal above is deferred; the implementation fixes
+`openid name email`. Partner-key flows are not supported.
+
+System identification headers name this package and its pinned Better Auth
+version. Keep those header versions synchronized when releasing or updating peers.
 
 The exact client sign-in call and callback path must be documented for the pinned
 Better Auth version. Current documentation uses `signIn.social` and
@@ -157,11 +164,32 @@ Better Auth 1.7.2 is the initial development dependency, matching the inspected
 release, select a tested peer range and review current upstream security fixes.
 Do not add Effect merely because a neighboring project uses it.
 
-The package remains `private: true` until there is a working implementation.
-`bun test --pass-with-no-tests` makes the initial scaffold runnable and provides
-no evidence of authentication correctness. Remove that flag when adding the first
-behavioral tests. Fallow's temporary Better Auth and Bun type dependency exclusions
-must also be removed when implementation and tests consume them.
+The package remains `private: true` until live verification and release checks
+are complete. Tests no longer allow an empty suite; temporary empty-file and
+unused-dependency exemptions have been removed.
+
+### Effect decision
+
+The API must remain free of Effect types, runtime configuration, and imports.
+The minimal implementation delegates OAuth to Better Auth and adds one bounded
+UserInfo request with profile validation. Plain TypeScript is sufficient; Effect
+is not a dependency. Reconsider it only if custom request workflows become complex
+enough to justify an internal runtime. Any future adoption must keep emitted
+public declarations and callback errors free of Effect-specific types and causes.
+
+### Verified locally and still pending
+
+Tests use a local OIDC HTTP server, signed JWTs, Better Auth's memory adapter, and
+its actual browser callbacks. They verify session creation, repeat login across
+email changes, both environments, Basic token authentication, PKCE, headers,
+invalid state/nonce/signature/issuer/audience/expiry, subject mismatch, missing
+email or ID token, malformed responses, HTTP failure, consent denial, and sign-up
+restriction. Non-boolean verification claims remain unverified.
+
+Still pending: live test-merchant login on desktop and mobile, existing-account
+linking and collision scenarios, coexistence with another provider, timeout and
+redirect coverage, and broader runtime/version compatibility. The production-host
+test redirects HTTP transport to the local test server; it does not contact Vipps.
 
 Release and catalog workflows are included but gated by repository variables.
 Enabling releases requires a working implementation, removal of `private`, CI_PAT

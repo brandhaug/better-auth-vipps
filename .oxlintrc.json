@@ -320,12 +320,6 @@
 				"@typescript-eslint/require-await": "off",
 				"no-empty-function": "off"
 			}
-		},
-		{
-			"files": ["src/index.ts"],
-			"rules": {
-				"unicorn/no-empty-file": "off"
-			}
 		}
 	]
 }
