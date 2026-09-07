@@ -95,8 +95,9 @@ subscription key to UserInfo and uses Basic authentication for token exchange.
 The optional `scopes` proposal above is deferred; the implementation fixes
 `openid name email`. Partner-key flows are not supported.
 
-System identification headers name this package and its pinned Better Auth
-version. Keep those header versions synchronized when releasing or updating peers.
+System identification headers name this package and derive the plugin version and
+pinned Better Auth version from `package.json`, keeping the runtime values aligned
+with release metadata.
 
 The exact client sign-in call and callback path must be documented for the pinned
 Better Auth version. Current documentation uses `signIn.social` and
@@ -164,9 +165,9 @@ Better Auth 1.7.2 is the initial development dependency, matching the inspected
 release, select a tested peer range and review current upstream security fixes.
 Do not add Effect merely because a neighboring project uses it.
 
-The package remains `private: true` until live verification and release checks
-are complete. Tests no longer allow an empty suite; temporary empty-file and
-unused-dependency exemptions have been removed.
+The package is a release candidate, but publishing remains gated on live
+verification and release checks. Tests no longer allow an empty suite; temporary
+empty-file and unused-dependency exemptions have been removed.
 
 ### Effect decision
 
@@ -187,15 +188,18 @@ email or ID token, malformed responses, HTTP failure, consent denial, and sign-u
 restriction. Non-boolean verification claims remain unverified.
 
 Still pending: live test-merchant login on desktop and mobile, existing-account
-linking and collision scenarios, coexistence with another provider, timeout and
-redirect coverage, and broader runtime/version compatibility. The production-host
-test redirects HTTP transport to the local test server; it does not contact Vipps.
+linking and collision scenarios, coexistence with another provider, UserInfo
+timeout and discovery-failure coverage, and broader runtime/version compatibility.
+The production-host test redirects HTTP transport to the local test server; it
+does not contact Vipps. Package metadata and release validation are now checked
+by the build and release workflows.
 
-Release and catalog workflows are included but gated by repository variables.
-Enabling releases requires a working implementation, removal of `private`, CI_PAT
-setup for release-please, and npm trusted publishing for this repository and its
-`release` environment. Enable `ENABLE_RELEASES` only after that setup. Catalog
-updates require CI_PAT and `ENABLE_CATALOG_UPDATES`. Do not publish the scaffold.
+The release workflow runs on `master` pushes and manual dispatch; release-please
+gates publishing on a newly created release. The catalog updater runs on its
+schedule, relevant package or lockfile changes, and manual dispatch. Running a
+release requires live verification, CI_PAT setup for release-please, and npm
+trusted publishing for this repository and its `release` environment. Do not
+publish until the remaining manual checks pass.
 
 ## Verification and acceptance criteria
 

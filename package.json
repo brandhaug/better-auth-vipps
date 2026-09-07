@@ -1,7 +1,6 @@
 {
 	"name": "better-auth-vipps",
-	"version": "0.0.0",
-	"private": true,
+	"version": "0.0.1",
 	"description": "Vipps MobilePay Login provider for Better Auth.",
 	"homepage": "https://github.com/brandhaug/better-auth-vipps#readme",
 	"bugs": {
@@ -15,15 +14,20 @@
 	},
 	"workspaces": [],
 	"files": [
-		"dist"
+		"dist/"
 	],
 	"type": "module",
 	"sideEffects": false,
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		}
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"scripts": {
 		"prepare": "git config core.hooksPath .githooks",
@@ -32,11 +36,11 @@
 		"format": "oxfmt --write",
 		"format:check": "oxfmt --check",
 		"typecheck": "tsc --noEmit",
-		"test": "bun test",
+		"test": "bun test --max-concurrency=1",
 		"build": "tsc -p tsconfig.build.json",
-		"dead-code": "fallow dead-code --fail-on-regression",
-		"validate": "bun run format:check && bun run lint && bun run typecheck && bun run test && bun run build && bun run dead-code",
-		"prepublishOnly": "bun run validate",
+		"pack:check": "node scripts/pack-check.mjs",
+		"dead-code": "bunx --bun fallow@3 dead-code --fail-on-regression",
+		"validate": "bun run format:check && bun run lint && bun run typecheck && bun run test && bun run build && bun run pack:check && bun run dead-code",
 		"example": "bun examples/browser.ts"
 	},
 	"dependencies": {
