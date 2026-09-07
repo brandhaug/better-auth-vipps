@@ -19,39 +19,54 @@ afterEach(() => {
 	}
 })
 
-type Scenario =
-	| 'success'
-	| 'nonce'
-	| 'issuer'
-	| 'audience'
-	| 'expired'
-	| 'signature'
-	| 'subject'
-	| 'missing-email'
-	| 'unverified'
-	| 'malformed'
-	| 'http-error'
-	| 'missing-token'
-	| 'denied'
-	| 'state'
-	| 'repeat'
+type TokenOverrides = {
+	nonce?: string
+	issuer?: string
+	audience?: string
+	expired?: boolean
+	signingKey?: CryptoKey
+	response?: (idToken: string) => Response | Promise<Response>
+}
 
-async function exercise(
-	scenario: Scenario,
+type UserInfoOverrides = {
+	response?: (
+		request: Request,
+		requestCount: number
+	) => Response | Promise<Response>
+}
+
+type CallbackOverrides = {
+	state?: string
+	error?: string
+}
+
+type FixtureOptions = {
+	disableSignUp?: boolean
+	environment?: VippsOptions['environment']
+	token?: TokenOverrides
+	userInfo?: UserInfoOverrides
+	callback?: CallbackOverrides
+}
+
+async function createLoginFixture({
 	disableSignUp = false,
-	environment: VippsOptions['environment'] = 'test'
-) {
+	environment = 'test',
+	token = {},
+	userInfo = {},
+	callback = {}
+}: FixtureOptions = {}) {
 	const hostname = environment === 'test' ? 'apitest.vipps.no' : 'api.vipps.no'
 	const issuer = `https://${hostname}/access-management-1.0/access/`
-	const keys = await generateKeyPair('RS256')
-	const foreignKeys = await generateKeyPair('RS256')
-	const jwk = await exportJWK(keys.publicKey)
 	const database = { user: [], session: [], account: [], verification: [] }
 	let nonce = ''
 	let challenge = ''
 	let tokenRequests = 0
 	let profileRequests = 0
 	let transportValid = false
+	let profileTransportValid = false
+
+	const keys = await generateKeyPair('RS256')
+	const jwk = await exportJWK(keys.publicKey)
 	const server = Bun.serve({
 		port: 0,
 		async fetch(request) {
@@ -88,23 +103,18 @@ async function exercise(
 				if (!transportValid) {
 					return Response.json({ error: 'invalid_request' }, { status: 400 })
 				}
-				const idToken = await new SignJWT({
-					nonce: scenario === 'nonce' ? 'wrong' : nonce
-				})
+				const idToken = await new SignJWT({ nonce: token.nonce ?? nonce })
 					.setProtectedHeader({ alg: 'RS256', kid: 'test-key' })
-					.setIssuer(scenario === 'issuer' ? 'https://wrong.example' : issuer)
-					.setAudience(scenario === 'audience' ? 'wrong' : 'test-client')
+					.setIssuer(token.issuer ?? issuer)
+					.setAudience(token.audience ?? 'test-client')
 					.setSubject('merchant-subject')
 					.setIssuedAt()
-					.setExpirationTime(scenario === 'expired' ? '0s' : '5m')
+					.setExpirationTime(token.expired ? '0s' : '5m')
 					.sign(
-						scenario === 'signature' ? foreignKeys.privateKey : keys.privateKey
+						token.signingKey === undefined ? keys.privateKey : token.signingKey
 					)
-				if (scenario === 'missing-token') {
-					return Response.json({
-						access_token: 'test-access',
-						token_type: 'Bearer'
-					})
+				if (token.response) {
+					return token.response(idToken)
 				}
 				return Response.json({
 					access_token: 'test-access',
@@ -114,35 +124,29 @@ async function exercise(
 			}
 			if (url.pathname === '/vipps-userinfo-api/userinfo/') {
 				profileRequests += 1
-				const email =
-					profileRequests > 1 ? 'changed@example.com' : 'test@example.com'
-				if (
-					request.headers.get('authorization') !== 'Bearer test-access' ||
-					request.headers.get('ocp-apim-subscription-key') !==
-						'test-subscription' ||
-					request.headers.get('merchant-serial-number') !== '123456'
-				) {
+				profileTransportValid =
+					request.headers.get('authorization') === 'Bearer test-access' &&
+					request.headers.get('ocp-apim-subscription-key') ===
+						'test-subscription' &&
+					request.headers.get('merchant-serial-number') === '123456'
+				if (!profileTransportValid) {
 					return new Response(null, { status: 401 })
 				}
-				if (scenario === 'http-error') {
-					return new Response('secret provider error', { status: 503 })
-				}
-				if (scenario === 'malformed') {
-					return new Response('{broken')
+				if (userInfo.response) {
+					return userInfo.response(request, profileRequests)
 				}
 				return Response.json({
-					sub: scenario === 'subject' ? 'someone-else' : 'merchant-subject',
+					sub: 'merchant-subject',
 					name: 'Test User',
-					email: scenario === 'missing-email' ? null : email,
-					email_verified: scenario === 'unverified' ? 'true' : true
+					email: 'test@example.com',
+					email_verified: true
 				})
 			}
 			return new Response(null, { status: 404 })
 		}
 	})
-	cleanup.push(() => {
-		void server.stop(true)
-	})
+	cleanup.push(() => void server.stop(true))
+
 	const originalFetch = globalThis.fetch
 	const transport = Object.assign(
 		(input: Parameters<typeof fetch>[0], init?: RequestInit) => {
@@ -173,6 +177,7 @@ async function exercise(
 			})
 		]
 	})
+
 	async function login() {
 		const signIn = await auth.handler(
 			new Request('http://localhost:3000/api/auth/sign-in/social', {
@@ -201,102 +206,227 @@ async function exercise(
 		challenge = authorization.searchParams.get('code_challenge') ?? ''
 		expect(nonce).not.toBe('')
 		expect(authorization.searchParams.get('code_challenge_method')).toBe('S256')
-		const callback = new URL('http://localhost:3000/api/auth/callback/vipps')
-		callback.searchParams.set(
+		const callbackURL = new URL('http://localhost:3000/api/auth/callback/vipps')
+		callbackURL.searchParams.set(
 			'state',
-			scenario === 'state'
-				? 'invalid-state'
-				: (authorization.searchParams.get('state') ?? '')
+			callback.state ?? authorization.searchParams.get('state') ?? ''
 		)
-		callback.searchParams.set(
-			scenario === 'denied' ? 'error' : 'code',
-			scenario === 'denied' ? 'access_denied' : 'test-code'
+		callbackURL.searchParams.set(
+			callback.error ? 'error' : 'code',
+			callback.error ?? 'test-code'
 		)
 		const cookies = signIn.headers
 			.getSetCookie()
 			.map((cookie) => cookie.split(';')[0])
 			.join('; ')
-		return auth.handler(new Request(callback, { headers: { Cookie: cookies } }))
+		return auth.handler(
+			new Request(callbackURL, { headers: { Cookie: cookies } })
+		)
 	}
-	let response = await login()
-	if (scenario === 'repeat') {
-		response = await login()
-	}
+
 	return {
+		auth,
 		database,
-		response,
-		tokenRequests,
-		profileRequests,
-		transportValid,
-		auth
+		login,
+		get tokenRequests() {
+			return tokenRequests
+		},
+		get profileRequests() {
+			return profileRequests
+		},
+		get transportValid() {
+			return transportValid
+		},
+		get profileTransportValid() {
+			return profileTransportValid
+		}
 	}
 }
 
 test('completes browser login with PKCE, required headers, and a real Better Auth session', async () => {
-	const result = await exercise('success')
-	expect(result.transportValid).toBe(true)
-	expect(result.response.headers.get('location')).toBe(
-		'http://localhost:3000/done'
-	)
-	expect(result.database.user).toHaveLength(1)
-	expect(result.database.account).toHaveLength(1)
-	expect(result.database.session).toHaveLength(1)
-	expect(result.database.user[0]).toEqual(
+	const fixture = await createLoginFixture()
+	const response = await fixture.login()
+	expect(fixture.transportValid).toBe(true)
+	expect(response.headers.get('location')).toBe('http://localhost:3000/done')
+	expect(fixture.database.user).toHaveLength(1)
+	expect(fixture.database.account).toHaveLength(1)
+	expect(fixture.database.session).toHaveLength(1)
+	expect(fixture.database.user[0]).toEqual(
 		expect.objectContaining({ email: 'test@example.com', emailVerified: true })
 	)
-	const cookies = result.response.headers
+	const cookies = response.headers
 		.getSetCookie()
 		.map((cookie) => cookie.split(';')[0])
 		.join('; ')
-	const session = await result.auth.api.getSession({
+	const session = await fixture.auth.api.getSession({
 		headers: new Headers({ Cookie: cookies })
 	})
 	expect(session?.user.email).toBe('test@example.com')
 })
 
-for (const scenario of [
-	'nonce',
-	'issuer',
-	'audience',
-	'expired',
-	'signature',
-	'subject',
-	'missing-email',
-	'malformed',
-	'http-error',
-	'missing-token',
-	'denied',
-	'state'
-] as const) {
-	test(`rejects ${scenario} without creating a user or session`, async () => {
-		const result = await exercise(scenario)
-		expect(result.database.user).toHaveLength(0)
-		expect(result.database.session).toHaveLength(0)
-		expect(result.response.headers.get('location')).not.toBe(
-			'http://localhost:3000/done'
-		)
-		if (scenario === 'denied' || scenario === 'state') {
-			expect(result.tokenRequests).toBe(0)
-		}
-		if (
-			['nonce', 'issuer', 'audience', 'expired', 'signature'].includes(scenario)
-		) {
-			expect(result.profileRequests).toBe(0)
-		}
+function expectRejected(
+	response: Response,
+	fixture: Awaited<ReturnType<typeof createLoginFixture>>,
+	error: string
+) {
+	expect(
+		new URL(response.headers.get('location') ?? '').searchParams.get('error')
+	).toBe(error)
+	expect(fixture.database.user).toHaveLength(0)
+	expect(fixture.database.account).toHaveLength(0)
+	expect(fixture.database.session).toHaveLength(0)
+}
+
+const invalidIdTokenCases = [
+	['nonce mismatch', { nonce: 'wrong' }],
+	['issuer mismatch', { issuer: 'https://wrong.example' }],
+	['audience mismatch', { audience: 'wrong' }],
+	['expired token', { expired: true }]
+] as const
+for (const [name, token] of invalidIdTokenCases) {
+	test(`rejects ${name} before UserInfo`, async () => {
+		const fixture = await createLoginFixture({ token })
+		const response = await fixture.login()
+		expectRejected(response, fixture, 'unable_to_get_user_info')
+		expect(fixture.tokenRequests).toBe(1)
+		expect(fixture.profileRequests).toBe(0)
 	})
 }
 
+test('rejects an invalid signature before UserInfo', async () => {
+	const { privateKey } = await generateKeyPair('RS256')
+	const fixture = await createLoginFixture({
+		token: { signingKey: privateKey }
+	})
+	const response = await fixture.login()
+	expectRejected(response, fixture, 'unable_to_get_user_info')
+	expect(fixture.tokenRequests).toBe(1)
+	expect(fixture.profileRequests).toBe(0)
+})
+
+const userInfoCases = [
+	[
+		'subject mismatch',
+		{
+			response: () =>
+				Response.json({
+					sub: 'someone-else',
+					name: 'Test User',
+					email: 'test@example.com'
+				})
+		}
+	],
+	[
+		'missing email',
+		{
+			response: () =>
+				Response.json({
+					sub: 'merchant-subject',
+					name: 'Test User',
+					email: null
+				})
+		}
+	],
+	['malformed response', { response: () => new Response('{broken') }],
+	[
+		'HTTP error',
+		{ response: () => new Response('provider error', { status: 503 }) }
+	],
+	[
+		'redirect response',
+		{
+			response: () =>
+				Response.redirect('https://unexpected.example/userinfo', 302)
+		}
+	]
+] as const
+for (const [name, userInfo] of userInfoCases) {
+	test(`rejects ${name} after requesting UserInfo`, async () => {
+		const fixture = await createLoginFixture({ userInfo })
+		const response = await fixture.login()
+		expectRejected(response, fixture, 'unable_to_get_user_info')
+		expect(fixture.tokenRequests).toBe(1)
+		expect(fixture.profileRequests).toBe(1)
+		expect(fixture.profileTransportValid).toBe(true)
+	})
+}
+
+test('rejects a token endpoint redirect before UserInfo', async () => {
+	const fixture = await createLoginFixture({
+		token: {
+			response: () => Response.redirect('https://unexpected.example/token', 302)
+		}
+	})
+	const response = await fixture.login()
+	expectRejected(response, fixture, 'invalid_code')
+	expect(fixture.tokenRequests).toBe(1)
+	expect(fixture.profileRequests).toBe(0)
+	expect(fixture.transportValid).toBe(true)
+})
+
+test('rejects a token response without an ID token before UserInfo', async () => {
+	const fixture = await createLoginFixture({
+		token: {
+			response: () =>
+				Response.json({ access_token: 'test-access', token_type: 'Bearer' })
+		}
+	})
+	const response = await fixture.login()
+	expectRejected(response, fixture, 'unable_to_get_user_info')
+	expect(fixture.tokenRequests).toBe(1)
+	expect(fixture.profileRequests).toBe(0)
+})
+
+test('passes provider denial through without making a token request', async () => {
+	const fixture = await createLoginFixture({
+		callback: { error: 'access_denied' }
+	})
+	const response = await fixture.login()
+	expectRejected(response, fixture, 'access_denied')
+	expect(fixture.tokenRequests).toBe(0)
+	expect(fixture.profileRequests).toBe(0)
+})
+
+test('rejects an invalid OAuth state without making a token request', async () => {
+	const fixture = await createLoginFixture({
+		callback: { state: 'invalid-state' }
+	})
+	const response = await fixture.login()
+	expect(
+		new URL(response.headers.get('location') ?? '').searchParams.get('error')
+	).toBe('state_mismatch')
+	expect(fixture.database.user).toHaveLength(0)
+	expect(fixture.database.account).toHaveLength(0)
+	expect(fixture.database.session).toHaveLength(0)
+	expect(fixture.tokenRequests).toBe(0)
+	expect(fixture.profileRequests).toBe(0)
+})
+
 test('does not promote a string verification claim to verified', async () => {
-	const result = await exercise('unverified')
-	expect(result.database.user[0]).toEqual(
+	const fixture = await createLoginFixture({
+		userInfo: {
+			response: () =>
+				Response.json({
+					sub: 'merchant-subject',
+					name: 'Test User',
+					email: 'test@example.com',
+					email_verified: 'true'
+				})
+		}
+	})
+	await fixture.login()
+	expect(fixture.database.user[0]).toEqual(
 		expect.objectContaining({ emailVerified: false })
 	)
 })
 
-test('honors disabled sign-up', async () => {
-	const result = await exercise('success', true)
-	expect(result.database.user).toHaveLength(0)
-	expect(result.database.session).toHaveLength(0)
+test('honors disabled sign-up without creating partial records', async () => {
+	const fixture = await createLoginFixture({ disableSignUp: true })
+	const response = await fixture.login()
+	expectRejected(response, fixture, 'signup_disabled')
+	expect(fixture.tokenRequests).toBe(1)
+	expect(fixture.profileRequests).toBe(1)
+	expect(fixture.profileTransportValid).toBe(true)
 })
 
 test('rejects incomplete credentials before any network request', () => {
@@ -311,17 +441,34 @@ test('rejects incomplete credentials before any network request', () => {
 })
 
 test('uses the production environment throughout the browser flow', async () => {
-	const result = await exercise('success', false, 'production')
-	expect(result.transportValid).toBe(true)
-	expect(result.database.session).toHaveLength(1)
+	const fixture = await createLoginFixture({ environment: 'production' })
+	await fixture.login()
+	expect(fixture.transportValid).toBe(true)
+	expect(fixture.database.session).toHaveLength(1)
 })
 
 test('reuses the external account after the provider email changes', async () => {
-	const result = await exercise('repeat')
-	expect(result.response.headers.get('location')).toBe(
+	const fixture = await createLoginFixture({
+		userInfo: {
+			response: (_request, requestCount) =>
+				Response.json({
+					sub: 'merchant-subject',
+					name: 'Test User',
+					email:
+						requestCount === 1 ? 'test@example.com' : 'changed@example.com',
+					email_verified: true
+				})
+		}
+	})
+	const firstResponse = await fixture.login()
+	const secondResponse = await fixture.login()
+	expect(firstResponse.headers.get('location')).toBe(
 		'http://localhost:3000/done'
 	)
-	expect(result.profileRequests).toBe(2)
-	expect(result.database.user).toHaveLength(1)
-	expect(result.database.account).toHaveLength(1)
+	expect(secondResponse.headers.get('location')).toBe(
+		'http://localhost:3000/done'
+	)
+	expect(fixture.profileRequests).toBe(2)
+	expect(fixture.database.user).toHaveLength(1)
+	expect(fixture.database.account).toHaveLength(1)
 })

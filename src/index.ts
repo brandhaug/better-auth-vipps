@@ -1,5 +1,6 @@
 import { type GenericOAuthConfig } from 'better-auth/plugins/generic-oauth'
 import { decodeJwt } from 'jose'
+import packageMetadata from '../package.json' with { type: 'json' }
 
 /** Merchant credentials and browser-login configuration. Keep these on the server. */
 export type VippsOptions = {
@@ -77,9 +78,9 @@ export function vipps(options: VippsOptions): GenericOAuthConfig {
 	const headers = {
 		'Merchant-Serial-Number': options.merchantSerialNumber,
 		'Vipps-System-Name': 'better-auth',
-		'Vipps-System-Version': '1.7.2',
+		'Vipps-System-Version': packageMetadata.peerDependencies['better-auth'],
 		'Vipps-System-Plugin-Name': 'better-auth-vipps',
-		'Vipps-System-Plugin-Version': '0.0.0'
+		'Vipps-System-Plugin-Version': packageMetadata.version
 	}
 	const subscriptionKey = options.subscriptionKey
 	const clientId = options.clientId
@@ -106,7 +107,7 @@ export function vipps(options: VippsOptions): GenericOAuthConfig {
 				return null
 			}
 			try {
-				// Better Auth 1.7.2 verifies the signature, audience, expiry, and nonce
+				// Better Auth verifies the signature, audience, expiry, and nonce
 				// before invoking this callback. Decoding here binds UserInfo to that
 				// verified identity; this function is not a standalone token verifier.
 				const claims = decodeJwt(tokens.idToken)

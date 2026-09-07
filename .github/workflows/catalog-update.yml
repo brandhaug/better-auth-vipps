@@ -19,7 +19,6 @@ concurrency:
 
 jobs:
   update:
-    if: vars.ENABLE_CATALOG_UPDATES == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write

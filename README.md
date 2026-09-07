@@ -3,9 +3,9 @@
 Vipps MobilePay Login provider helper for Better Auth. The public API uses plain
 TypeScript options and Better Auth configuration, with no Effect dependency.
 
-**Unreleased.** Browser login has been tested with a local OIDC server and real
-Better Auth callbacks. A live Vipps test-merchant check is still required. The
-package remains private and publishing is disabled.
+**Release candidate.** Browser login has been tested with a local OIDC server and
+real Better Auth callbacks. A live Vipps test-merchant check is still required
+before publishing.
 
 ## Usage
 
@@ -58,7 +58,7 @@ UserInfo identifies the same subject. Logout clears the local session only.
 
 ## Run the development example
 
-Use Bun 1.4 or newer:
+Use Bun 1.4 or newer. Better Auth 1.7.2 is the only currently tested peer:
 
 ```sh
 bun install
@@ -77,15 +77,20 @@ button and review deployment settings before shipping an application.
 ## Development checks
 
 ```sh
-npm install -g fallow@3
 bun run validate
 ```
+
+Validation manages Fallow through `bunx fallow@3`; no global installation is
+needed. The package check resolves Bun catalog dependencies, installs the packed
+artifact in an isolated npm consumer, compiles a TypeScript consumer, and loads
+the package by name in both Node and Bun.
 
 The integration suite covers real session creation, test/production routing,
 repeat login after email changes, PKCE and headers, sign-up restrictions, and
 rejection of invalid tokens and profiles. It uses local HTTP responses in place
 of Vipps network calls; it does not replace Better Auth's callback implementation.
-No real Vipps credentials are used by tests or CI.
+No real Vipps credentials are used by tests or CI. `bun run validate` also checks
+that the packed package contains the ESM entry point and declarations.
 
 Tooling follows the sibling projects: Bun catalogs, strict TypeScript, Oxfmt,
 type-aware Oxlint, lint-staged, Fallow, Conventional Commit PR titles, and
