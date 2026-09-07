@@ -1,6 +1,6 @@
 {
 	"name": "better-auth-vipps",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Vipps MobilePay Login provider for Better Auth.",
 	"homepage": "https://github.com/brandhaug/better-auth-vipps#readme",
 	"bugs": {
