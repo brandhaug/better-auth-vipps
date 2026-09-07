@@ -1,0 +1,38 @@
+name: Catalog Update
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - '**/package.json'
+      - '**/bun.lock'
+  workflow_dispatch:
+
+# Rebuilds of open update PRs must run one at a time; queued (not cancelled)
+# runs are what let the cascade converge after each merge.
+concurrency:
+  group: catalog-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: vars.ENABLE_CATALOG_UPDATES == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # A PAT (not the default GITHUB_TOKEN) so branch updates are
+          # attributed to a real user and CI runs without manual approval.
+          token: ${{ secrets.CI_PAT }}
+
+      - uses: brandhaug/catalog-update-action@v1
+        with:
+          config: '.catalog-updaterc.json'
+          token: ${{ secrets.CI_PAT }}
