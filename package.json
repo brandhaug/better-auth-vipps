@@ -72,7 +72,7 @@
 		"oxlint-tsgolint": "7.0.2001",
 		"typescript": "7.0.2",
 		"ultracite": "7.11.0",
-		"@types/bun": "1.4.0",
+		"@types/bun": "1.4.2",
 		"better-auth": "1.7.2",
 		"jose": "6.2.12"
 	}
