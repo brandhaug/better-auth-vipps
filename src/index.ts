@@ -90,7 +90,6 @@ export function vipps(options: VippsOptions): GenericOAuthConfig {
 		clientId,
 		clientSecret: options.clientSecret,
 		discoveryUrl: `${issuer}.well-known/openid-configuration`,
-		accountIssuer: issuer,
 		discoveryHeaders: headers,
 		authorizationHeaders: headers,
 		tokenEndpointAuth: { method: 'client_secret_basic' },
