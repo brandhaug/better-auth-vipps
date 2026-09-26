@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.2](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.1...better-auth-vipps-v0.1.2) (2026-09-26)
+
+
+### Miscellaneous
+
+* **deps:** bump @types/node from 26.6.1 to 26.6.2 ([#21](https://github.com/brandhaug/better-auth-vipps/issues/21)) ([7058de2](https://github.com/brandhaug/better-auth-vipps/commit/7058de2d2d7143b9f151d571a8eb284eda6a51a3))
+* **deps:** bump better-auth from 1.7.2 to 1.7.5 ([#11](https://github.com/brandhaug/better-auth-vipps/issues/11)) ([4d05402](https://github.com/brandhaug/better-auth-vipps/commit/4d05402afe6aba797bf6b72ff6a6f5aac24a7109))
+* **deps:** bump oxlint from 1.83.0 to 1.85.0 ([#23](https://github.com/brandhaug/better-auth-vipps/issues/23)) ([80402f2](https://github.com/brandhaug/better-auth-vipps/commit/80402f2abf35fb204d24765d1d9924bb149f026d))
+
 ## [0.1.1](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.0...better-auth-vipps-v0.1.1) (2026-09-21)
 
 
