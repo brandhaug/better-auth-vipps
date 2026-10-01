@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.2](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.1...better-auth-vipps-v0.1.2) (2026-10-01)
+
+
+### Miscellaneous
+
+* **deps:** bump @types/node from 26.6.1 to 26.6.2 ([#21](https://github.com/brandhaug/better-auth-vipps/issues/21)) ([7058de2](https://github.com/brandhaug/better-auth-vipps/commit/7058de2d2d7143b9f151d571a8eb284eda6a51a3))
+* **deps:** bump @types/node from 26.6.2 to 26.6.3 ([#26](https://github.com/brandhaug/better-auth-vipps/issues/26)) ([29bf6d4](https://github.com/brandhaug/better-auth-vipps/commit/29bf6d4e4c6a4eb3d325afe2722ff1eea774a1f6))
+* **deps:** bump better-auth from 1.7.2 to 1.7.5 ([#11](https://github.com/brandhaug/better-auth-vipps/issues/11)) ([4d05402](https://github.com/brandhaug/better-auth-vipps/commit/4d05402afe6aba797bf6b72ff6a6f5aac24a7109))
+* **deps:** bump better-auth from 1.7.5 to 1.7.6 ([#25](https://github.com/brandhaug/better-auth-vipps/issues/25)) ([18cedba](https://github.com/brandhaug/better-auth-vipps/commit/18cedba61abf9b1a13c03cc1dfe081dfb1c281e1))
+* **deps:** bump lint-staged from 17.5.1 to 17.6.0 ([#27](https://github.com/brandhaug/better-auth-vipps/issues/27)) ([303f227](https://github.com/brandhaug/better-auth-vipps/commit/303f227bc960ae8f900cde6207d8ddd37cf41648))
+* **deps:** bump oxfmt from 0.68.0 to 0.70.0 ([#22](https://github.com/brandhaug/better-auth-vipps/issues/22)) ([4987f8d](https://github.com/brandhaug/better-auth-vipps/commit/4987f8dfda44f346f189fc0296bec83832e3c18f))
+* **deps:** bump oxlint from 1.83.0 to 1.85.0 ([#23](https://github.com/brandhaug/better-auth-vipps/issues/23)) ([80402f2](https://github.com/brandhaug/better-auth-vipps/commit/80402f2abf35fb204d24765d1d9924bb149f026d))
+* **deps:** bump oxlint-tsgolint from 7.0.2002 to 7.0.2003 ([#24](https://github.com/brandhaug/better-auth-vipps/issues/24)) ([5b899c5](https://github.com/brandhaug/better-auth-vipps/commit/5b899c53210fa055fdf9357a2d19dd56fbe8d840))
+
 ## [0.1.1](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.0...better-auth-vipps-v0.1.1) (2026-09-21)
 
 
