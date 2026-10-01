@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.2...better-auth-vipps-v0.1.3) (2026-10-01)
+
+
+### Miscellaneous
+
+* **deps:** bump ultracite from 7.12.0 to 7.12.1 ([#28](https://github.com/brandhaug/better-auth-vipps/issues/28)) ([3c2013f](https://github.com/brandhaug/better-auth-vipps/commit/3c2013fc4641434729f0ea421b5f18b440c7f7ed))
+
 ## [0.1.2](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.1...better-auth-vipps-v0.1.2) (2026-10-01)
 
 
