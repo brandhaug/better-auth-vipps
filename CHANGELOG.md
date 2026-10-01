@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.3...better-auth-vipps-v0.1.4) (2026-10-01)
+
+
+### Miscellaneous
+
+* **deps:** bump oxfmt from 0.70.0 to 0.71.0 ([#30](https://github.com/brandhaug/better-auth-vipps/issues/30)) ([dcba2aa](https://github.com/brandhaug/better-auth-vipps/commit/dcba2aaf56691952d3a6f3ce611b1db1082ae594))
+* **deps:** bump oxlint from 1.85.0 to 1.86.0 ([#31](https://github.com/brandhaug/better-auth-vipps/issues/31)) ([7279724](https://github.com/brandhaug/better-auth-vipps/commit/7279724184d4d100e96012a13e0ef5ea120d2cca))
+
 ## [0.1.3](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.2...better-auth-vipps-v0.1.3) (2026-10-01)
 
 
