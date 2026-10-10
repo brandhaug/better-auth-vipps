@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.5](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.4...better-auth-vipps-v0.1.5) (2026-10-10)
+
+
+### Miscellaneous
+
+* **deps:** bump @types/node from 26.6.3 to 26.6.4 ([#36](https://github.com/brandhaug/better-auth-vipps/issues/36)) ([d09bd9e](https://github.com/brandhaug/better-auth-vipps/commit/d09bd9e4676d8257658880484f54df54f2fdfc87))
+* **deps:** bump better-auth from 1.7.6 to 1.7.7 ([#35](https://github.com/brandhaug/better-auth-vipps/issues/35)) ([da8671d](https://github.com/brandhaug/better-auth-vipps/commit/da8671dd5c6e8d8acb1807a19996afd9b040bee1))
+* **deps:** bump oxlint from 1.86.0 to 1.87.0 ([#39](https://github.com/brandhaug/better-auth-vipps/issues/39)) ([8f80058](https://github.com/brandhaug/better-auth-vipps/commit/8f8005850f5384375dc7d720b7539214312c6758))
+* **deps:** bump ultracite from 7.12.1 to 7.12.2 ([#33](https://github.com/brandhaug/better-auth-vipps/issues/33)) ([7028fd0](https://github.com/brandhaug/better-auth-vipps/commit/7028fd07bafd7eab21cb9861141cdae28d32ae6d))
+* **deps:** bump ultracite from 7.12.2 to 7.12.4 ([#40](https://github.com/brandhaug/better-auth-vipps/issues/40)) ([2fc8a7e](https://github.com/brandhaug/better-auth-vipps/commit/2fc8a7e3fc0b49af6d08ac1754a4c41177b5476f))
+
 ## [0.1.4](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.3...better-auth-vipps-v0.1.4) (2026-10-01)
 
 
