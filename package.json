@@ -54,14 +54,10 @@
 		"oxfmt": "catalog:",
 		"oxlint": "catalog:",
 		"oxlint-tsgolint": "catalog:",
-		"typescript": "catalog:",
-		"ultracite": "catalog:"
+		"typescript": "catalog:"
 	},
 	"peerDependencies": {
 		"better-auth": "1.7.2"
-	},
-	"overrides": {
-		"source-map-js": "1.2.2"
 	},
 	"engines": {
 		"bun": ">=1.4.3"
@@ -74,7 +70,6 @@
 		"oxlint": "1.87.0",
 		"oxlint-tsgolint": "7.0.2004",
 		"typescript": "7.0.2",
-		"ultracite": "8.0.0",
 		"@types/bun": "1.4.3",
 		"better-auth": "1.7.7",
 		"jose": "6.2.12"

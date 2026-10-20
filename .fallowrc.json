@@ -37,5 +37,5 @@
 		}
 	},
 	"entry": ["src/index.ts", "test/**/*.test.ts"],
-	"ignoreDependencies": ["ultracite"]
+	"ignorePatterns": ["vendor/**"]
 }

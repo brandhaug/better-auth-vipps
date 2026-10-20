@@ -10,5 +10,9 @@
 	"arrowParens": "always",
 	"bracketSameLine": false,
 	"bracketSpacing": true,
-	"ignorePatterns": ["CHANGELOG.md", ".release-please-manifest.json"]
+	"ignorePatterns": [
+		"CHANGELOG.md",
+		".release-please-manifest.json",
+		"vendor/**"
+	]
 }
