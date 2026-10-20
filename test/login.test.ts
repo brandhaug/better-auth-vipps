@@ -109,7 +109,7 @@ async function createLoginFixture({
 					.setAudience(token.audience ?? 'test-client')
 					.setSubject('merchant-subject')
 					.setIssuedAt()
-					.setExpirationTime(token.expired ? '0s' : '5m')
+					.setExpirationTime(token.expired ? '-5m' : '5m')
 					.sign(
 						token.signingKey === undefined ? keys.privateKey : token.signingKey
 					)

@@ -76,6 +76,9 @@ button and review deployment settings before shipping an application.
 
 ## Development checks
 
+Use Bun 1.4.3 or newer. `bun run typecheck` uses Bun's built-in `bun check`;
+the build still uses TypeScript to emit JavaScript and declarations.
+
 ```sh
 bun run validate
 ```
