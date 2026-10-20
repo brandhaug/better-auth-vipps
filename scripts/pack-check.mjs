@@ -10,7 +10,6 @@ const packageJson = JSON.parse(
 	readFileSync(new URL('../package.json', import.meta.url), 'utf8')
 )
 const betterAuthVersion = packageJson.peerDependencies['better-auth']
-const typescriptVersion = packageJson.catalog.typescript
 
 try {
 	execFileSync(
@@ -51,8 +50,7 @@ try {
 			'--prefix',
 			consumer,
 			artifact,
-			`better-auth@${betterAuthVersion}`,
-			`typescript@${typescriptVersion}`
+			`better-auth@${betterAuthVersion}`
 		],
 		{ stdio: ['ignore', 'inherit', 'inherit'] }
 	)
@@ -60,24 +58,24 @@ try {
 		join(consumer, 'consumer.mts'),
 		"import { vipps, type VippsOptions } from 'better-auth-vipps'\nconst options: VippsOptions = { clientId: 'id', clientSecret: 'secret', subscriptionKey: 'subscription', merchantSerialNumber: 'serial', environment: 'test' }\nvipps(options)\n"
 	)
-	execFileSync(
-		'node',
-		[
-			join(consumer, 'node_modules/typescript/bin/tsc'),
-			'--noEmit',
-			'--strict',
-			'--skipLibCheck',
-			'--target',
-			'ES2022',
-			'--module',
-			'NodeNext',
-			'--moduleResolution',
-			'NodeNext',
-			'--ignoreConfig',
-			join(consumer, 'consumer.mts')
-		],
-		{ stdio: ['ignore', 'inherit', 'inherit'] }
+	writeFileSync(
+		join(consumer, 'tsconfig.json'),
+		JSON.stringify({
+			compilerOptions: {
+				noEmit: true,
+				strict: true,
+				skipLibCheck: true,
+				target: 'ES2022',
+				module: 'NodeNext',
+				moduleResolution: 'NodeNext'
+			},
+			files: ['consumer.mts']
+		})
 	)
+	execFileSync('bun', ['check', '--project', join(consumer, 'tsconfig.json')], {
+		cwd: consumer,
+		stdio: ['ignore', 'inherit', 'inherit']
+	})
 	const smokeTest =
 		"import('better-auth-vipps').then(({ vipps }) => vipps({ clientId: 'id', clientSecret: 'secret', subscriptionKey: 'subscription', merchantSerialNumber: 'serial', environment: 'test' }))"
 	for (const runtime of ['node', 'bun']) {

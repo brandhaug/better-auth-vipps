@@ -35,7 +35,7 @@
 		"lint:fix": "oxlint --type-aware --fix",
 		"format": "oxfmt --write",
 		"format:check": "oxfmt --check",
-		"typecheck": "tsc --noEmit",
+		"typecheck": "bun check",
 		"test": "bun test --max-concurrency=1",
 		"build": "tsc -p tsconfig.build.json",
 		"pack:check": "node scripts/pack-check.mjs",
@@ -54,16 +54,15 @@
 		"oxfmt": "catalog:",
 		"oxlint": "catalog:",
 		"oxlint-tsgolint": "catalog:",
-		"typescript": "catalog:",
-		"ultracite": "catalog:"
+		"typescript": "catalog:"
 	},
 	"peerDependencies": {
 		"better-auth": "1.7.2"
 	},
 	"engines": {
-		"bun": ">=1.4.0"
+		"bun": ">=1.4.3"
 	},
-	"packageManager": "bun@1.4.0",
+	"packageManager": "bun@1.4.3",
 	"catalog": {
 		"@types/node": "26.6.4",
 		"lint-staged": "17.6.0",
@@ -71,7 +70,6 @@
 		"oxlint": "1.87.0",
 		"oxlint-tsgolint": "7.0.2004",
 		"typescript": "7.0.2",
-		"ultracite": "8.0.0",
 		"@types/bun": "1.4.3",
 		"better-auth": "1.7.7",
 		"jose": "6.2.12"

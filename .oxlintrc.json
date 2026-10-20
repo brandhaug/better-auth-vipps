@@ -4,7 +4,7 @@
 	"jsPlugins": [
 		{
 			"name": "anti-slop",
-			"specifier": "./node_modules/ultracite/config/oxlint/anti-slop/plugin.mjs"
+			"specifier": "./vendor/ultracite/plugin.mjs"
 		}
 	],
 	"options": {
@@ -21,7 +21,7 @@
 		"builtin": true,
 		"es2024": true
 	},
-	"ignorePatterns": ["node_modules/**", "dist/**"],
+	"ignorePatterns": ["node_modules/**", "dist/**", "vendor/**"],
 	"rules": {
 		"eqeqeq": "error",
 		"no-eq-null": "error",
