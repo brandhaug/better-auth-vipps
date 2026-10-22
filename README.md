@@ -58,7 +58,7 @@ UserInfo identifies the same subject. Logout clears the local session only.
 
 ## Run the development example
 
-Use Bun 1.4 or newer. Better Auth 1.7.2 is the only currently tested peer:
+Use Bun 1.4.4 or newer. Better Auth 1.7.2 is the only currently tested peer:
 
 ```sh
 bun install
@@ -76,7 +76,7 @@ button and review deployment settings before shipping an application.
 
 ## Development checks
 
-Use Bun 1.4.3 or newer. `bun run typecheck` uses Bun's built-in `bun check`;
+Use Bun 1.4.4 or newer. `bun run typecheck` uses Bun's built-in `bun check`;
 the build still uses TypeScript to emit JavaScript and declarations.
 CI and release checks use Node 24.22.0 for the isolated npm consumer check.
 
