@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.5...better-auth-vipps-v0.1.6) (2026-10-22)
+
+
+### Miscellaneous
+
+* **tooling:** upgrade Bun to 1.4.4 ([#52](https://github.com/brandhaug/better-auth-vipps/issues/52)) ([3de1c49](https://github.com/brandhaug/better-auth-vipps/commit/3de1c492d6195054af2b5ad447db2cd6a8400eed))
+
 ## [0.1.5](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.4...better-auth-vipps-v0.1.5) (2026-10-20)
 
 
