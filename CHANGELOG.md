@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.7](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.6...better-auth-vipps-v0.1.7) (2026-10-25)
+
+
+### Bug Fixes
+
+* **security:** override 1 vulnerable transitive dependency ([#56](https://github.com/brandhaug/better-auth-vipps/issues/56)) ([f67e6ab](https://github.com/brandhaug/better-auth-vipps/commit/f67e6ab6c812082f09960dd5246fe7a74df6f309))
+
+
+### Miscellaneous
+
+* **deps:** bump all-patch-updates dependencies ([#51](https://github.com/brandhaug/better-auth-vipps/issues/51)) ([4813ee9](https://github.com/brandhaug/better-auth-vipps/commit/4813ee9df2c19f67a61763eb59ac7afcda168e27))
+* **deps:** bump oxc dependencies ([#54](https://github.com/brandhaug/better-auth-vipps/issues/54)) ([ac4df7e](https://github.com/brandhaug/better-auth-vipps/commit/ac4df7e78932ab027bc68a11894a5accba5369b9))
+
 ## [0.1.6](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.5...better-auth-vipps-v0.1.6) (2026-10-22)
 
 
