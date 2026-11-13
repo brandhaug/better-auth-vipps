@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.8](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.7...better-auth-vipps-v0.1.8) (2026-11-13)
+
+
+### Miscellaneous
+
+* **deps:** bump all-patch-updates dependencies ([#57](https://github.com/brandhaug/better-auth-vipps/issues/57)) ([000cadd](https://github.com/brandhaug/better-auth-vipps/commit/000cadd6e26d14e92323a4ce58cec3354f67652d))
+* **deps:** bump all-patch-updates dependencies ([#59](https://github.com/brandhaug/better-auth-vipps/issues/59)) ([7a846a6](https://github.com/brandhaug/better-auth-vipps/commit/7a846a6d260b22611023a53eb4ec0fdb869a0033))
+* **deps:** bump all-patch-updates dependencies ([#61](https://github.com/brandhaug/better-auth-vipps/issues/61)) ([90dc587](https://github.com/brandhaug/better-auth-vipps/commit/90dc58768e822e40c08421f9c0ccd972a98b3c84))
+* **deps:** bump better-auth from 1.7.15 to 1.7.18 ([#63](https://github.com/brandhaug/better-auth-vipps/issues/63)) ([19ff0e1](https://github.com/brandhaug/better-auth-vipps/commit/19ff0e16768d5097ad64a8e2795b3d757b4d944e))
+* **deps:** bump oxc dependencies ([#60](https://github.com/brandhaug/better-auth-vipps/issues/60)) ([26afc23](https://github.com/brandhaug/better-auth-vipps/commit/26afc232d2a77f6ff280dc6a3bef1ba22872f848))
+* **deps:** bump oxc dependencies ([#62](https://github.com/brandhaug/better-auth-vipps/issues/62)) ([88650c1](https://github.com/brandhaug/better-auth-vipps/commit/88650c11b7bb31536d93a94abcc89e74205dc609))
+* **deps:** bump oxc dependencies ([#64](https://github.com/brandhaug/better-auth-vipps/issues/64)) ([0657f72](https://github.com/brandhaug/better-auth-vipps/commit/0657f7269aad0f1da31ef69734ac87d1263036dc))
+* **deps:** bump oxc dependencies ([#65](https://github.com/brandhaug/better-auth-vipps/issues/65)) ([99512f3](https://github.com/brandhaug/better-auth-vipps/commit/99512f36f5bcf1cdd4d0ea5efba4eead26ad0f95))
+
 ## [0.1.7](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.6...better-auth-vipps-v0.1.7) (2026-10-25)
 
 
