@@ -68,13 +68,13 @@
 	"packageManager": "bun@1.4.4",
 	"catalog": {
 		"@types/node": "26.6.6",
-		"lint-staged": "17.6.0",
+		"lint-staged": "17.6.1",
 		"oxfmt": "0.79.0",
 		"oxlint": "1.94.0",
 		"oxlint-tsgolint": "7.0.2007",
 		"typescript": "7.0.2",
 		"@types/bun": "1.4.4",
-		"better-auth": "1.7.23",
+		"better-auth": "1.7.25",
 		"jose": "6.2.17"
 	}
 }
