@@ -71,10 +71,10 @@
 		"lint-staged": "17.6.1",
 		"oxfmt": "0.79.0",
 		"oxlint": "1.94.0",
-		"oxlint-tsgolint": "7.0.2007",
+		"oxlint-tsgolint": "7.0.2008",
 		"typescript": "7.0.2",
-		"@types/bun": "1.4.4",
-		"better-auth": "1.7.25",
-		"jose": "6.2.17"
+		"@types/bun": "1.4.5",
+		"better-auth": "1.7.27",
+		"jose": "6.2.18"
 	}
 }
