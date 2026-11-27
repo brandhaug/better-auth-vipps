@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.9](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.8...better-auth-vipps-v0.1.9) (2026-11-27)
+
+
+### Miscellaneous
+
+* **deps:** bump lint-staged from 17.6.1 to 17.6.2 ([#70](https://github.com/brandhaug/better-auth-vipps/issues/70)) ([d293a85](https://github.com/brandhaug/better-auth-vipps/commit/d293a859e00a9bdde393f62b40b2bd11c8edf1a5))
+* **deps:** bump oxc dependencies ([#72](https://github.com/brandhaug/better-auth-vipps/issues/72)) ([63e3030](https://github.com/brandhaug/better-auth-vipps/commit/63e30302ca8ca5d12d7febb9411f1b99dc0023ee))
+
 ## [0.1.8](https://github.com/brandhaug/better-auth-vipps/compare/better-auth-vipps-v0.1.7...better-auth-vipps-v0.1.8) (2026-11-25)
 
 
